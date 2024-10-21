@@ -1,18 +1,31 @@
 const form = document.getElementById("registration");
 //127.0.0.1:3000/index.html
-http: const username = form.elements["username"];
+const username = form.elements["username"];
 const email = form.elements["email"];
 const password = form.elements["password"];
 const repeatPassword = form.elements["passwordCheck"];
 
+const login = document.getElementById("login");
+const loginUsername = login.elements["username"];
+const loginPassword = login.elements["password"];
+
 // Simple email validation.
 // Using the event object's "returnValue" property,
-// we can prevent form submission if the values are invalid.dd
+// we can prevent form submission if the values are invalid.
 function validateRegistration(evt) {
   evt.preventDefault();
+
+  function validateUsername() {
+    if (sessionStorage.getItem(username.value)) {
+      alert(`username ${username.value} already taken`);
+      username.focus();
+      return false;
+    }
+    return username.value;
+  }
+
   function validateEmail() {
     let emailVal = email.value;
-
     const atpos = emailVal.indexOf("@");
     const dotpos = emailVal.lastIndexOf(".");
 
@@ -50,8 +63,7 @@ function validateRegistration(evt) {
     let usernameVal = username.value;
     let passwordVal = password.value;
     let passwordVerify = repeatPassword.value;
-    let regex =
-      "^(?=.*[pP])(?=.*[aA])(?=.*[sS])(?=.*[sS])(?=.*[wW])(?=.*[oO])(?=.*[rR])(?=.*[dD])[a-zA-Z]{8}$";
+    let regex = /^(?=.*[pP])(?=.*[aA])(?=.*[sS])(?=.*[sS])(?=.*[wW])(?=.*[oO])(?=.*[rR])(?=.*[dD])[a-zA-Z]{8}$/;
 
     if (passwordVal !== passwordVerify) {
       alert("The passwords do not match");
@@ -70,6 +82,12 @@ function validateRegistration(evt) {
     return passwordVal;
   }
 
+  const usernameValidated = validateUsername();
+  if (usernameValidated === false) {
+    evt.returnValue === false;
+    return false;
+  }
+
   const emailValidated = validateEmail();
   if (emailValidated === false) {
     evt.returnValue = false;
@@ -81,13 +99,64 @@ function validateRegistration(evt) {
     evt.returnValue = false;
     return false;
   }
+  storageUsername = `user-${username.value}`;
+  storageEmail = `email-${username.value}`;
+  storagePassword = `password-${username.value}`;
+  sessionStorage.setItem(storageUsername, username.value);
+  sessionStorage.setItem(storageEmail, email.value);
+  sessionStorage.setItem(storagePassword, password.value);
 
-  sessionStorage.setItem("username", username.value);
-  sessionStorage.setItem("email", emailValidated);
-  sessionStorage.setItem("password", passwordValidated);
+  form.reset();
+  alert("You have successfully created an account");
 }
 
-form.addEventListener("submit", (evt) => {
+form.addEventListener("submit", validateRegistration);
+
+function validateLogin(evt) {
   evt.preventDefault();
-  validateRegistration();
-});
+
+  const loginPasswordVal = loginPassword.value;
+  const loginUsernameVal = loginUsername.value;
+
+  function validateLoginUsername() {
+    const storageLoginUsername = `user-${loginUsernameVal}`.toLowerCase();
+    if (!(loginUsernameVal == sessionStorage.getItem(storageLoginUsername))) {
+      alert("No account found with the provided username");
+      loginUsername.focus();
+      return false;
+    }
+    return loginUsernameVal;
+  }
+
+  function validateLoginPassword() {
+    storageLoginPassword = `password-${loginUsernameVal}`;
+    if (!(loginPasswordVal == sessionStorage.getItem(storageLoginPassword))) {
+      console.log(loginPasswordVal + " " + sessionStorage.getItem["password"]);
+      alert("Incorrect password");
+      loginPassword.focus();
+      return false;
+    }
+    return loginPasswordVal;
+  }
+
+  let loginUsernameValidated = validateLoginUsername();
+  if (loginUsernameValidated === false) {
+    evt.returnValue = false;
+    return false;
+  }
+
+  let loginPasswordValidated = validateLoginPassword();
+  if (loginPasswordValidated === false) {
+    evt.returnValue = false;
+    return false;
+  }
+
+  if (document.querySelector("#login > div > input:first-child").checked) {
+    alert("login successful, you will remain logged in to the account");
+  } else {
+    alert("login successful");
+  }
+  login.reset();
+}
+
+login.addEventListener("submit", validateLogin);
