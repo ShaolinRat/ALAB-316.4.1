@@ -16,7 +16,7 @@ function validateRegistration(evt) {
   evt.preventDefault();
 
   function validateUsername() {
-    if (sessionStorage.getItem(username.value)) {
+    if (sessionStorage.getItem(`user-${username.value}`)) {
       alert(`username ${username.value} already taken`);
       username.focus();
       return false;
