@@ -31,7 +31,12 @@
           />
           <span class="input-icon"><i class="fa-solid fa-user"></i></span><br />
 
-          <input name="email" type="text" placeholder="Email" pattern="^(?=.*@).+$" />
+          <input
+            name="email"
+            type="text"
+            placeholder="Email"
+            pattern="^(?=.*@).+$"
+          />
           <span class="input-icon"><i class="fa-solid fa-envelope"></i></span
           ><br />
 
@@ -39,8 +44,7 @@
             name="password"
             type="text"
             placeholder="Password"
-            minlength="12"
-            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$"
             required
           />
           <span class="input-icon"><i class="fa-solid fa-key"></i></span><br />
